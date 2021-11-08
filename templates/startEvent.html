@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Q: Start Event{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+    var selectedPlaylistId = "";
+    selectPlaylist("");
+    function selectPlaylist(playlistId){
+        selectedPlaylistId = playlistId;
+        elements = document.querySelectorAll('.select-button');
+        elements.forEach((element, key) => {
+            element.style.backgroundColor="#DBDBDB";
+            element.style.color="#0275d8";
+        })
+        e = document.getElementById(playlistId);
+        if(e != null){
+            e.style.backgroundColor="#0275d8";
+            e.style.color="white";
+        }
+    }
+    function submit(){
+        var eventName = document.getElementById("ename").value;
+        if(eventName.length < 3){
+            alert("Enter an event name with at least 3 characters.");
+        }else{
+            window.location.replace(`http://localhost:5000/event?playlistId=${selectedPlaylistId}&event_name=${eventName}`);
+        }
+    }
+</script>
+{{ super() }}
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('static', filename='startEvent.css')}}">
+{% endblock %}
+
+{% block page_content %}
+    <div id="eventName">
+        <h4>Enter A Name For The Event</h4>
+        <input type="text" id="ename" name="ename">
+    </div>
+    {% if playlists|length > 0 %}
+        <div class="playlistCards">
+        {% for p in playlists %}
+            <div class="card mb-4 shadow-sm border">
+                <img class="card-img-top" src="{{ p.image_url }}" alt="Card image cap" width="8rem" height="8rem">
+                <div class="card-body">
+                    <h5 class="card-title">{{ p.name }}</h5>
+                    <p class="card-text">{{ p.track_count }} tracks</p>
+                    <a class="btn select-button" id="{{ p.id }}" onclick="selectPlaylist(&quot;{{ p.id }}&quot;, &quot;{{ p.name }}&quot;)" class="btn btn-primary">Use This Playlist</a>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    {% else %}
+        <h1>Ah Snap! You're fresh out of playlists!</h1>
+    {% endif %}
+    <button id="submitButton" class="btn btn-primary" onclick="submit()">Start Event</button>
+{% endblock %}

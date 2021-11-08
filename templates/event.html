@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Q: Event{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('static', filename='startEvent.css')}}">
+{% endblock %}
+
+{% block page_content %}
+    <h2>Queue for {{ event_name }}</h2>
+{% endblock %}

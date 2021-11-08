@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}The Q Profile{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('static', filename='profile.css')}}">
+{% endblock %}
+
+{% block page_content %}
+
+<div class="jumbotron">
+    <div class="row">
+        <div class="col-xs-6">
+            <img id="profileImage" src="./static/images/profile_icon.png">
+        </div>
+        <div class="col-xs-6">
+            <h2 id="username">{{ current_user.username }}</h2>
+            <p>Joined Q on {{ current_user.joinDate }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="startEvent">
+    <a class="btn btn-primary" href="{{ url_for('start_event') }}">Start Event</a>
+</div>
+
+
+<a href="/signout" type="button" class="btn btn-danger">Sign Out</a>
+
+{% endblock %}
