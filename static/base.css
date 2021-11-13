@@ -3,6 +3,10 @@
   margin-right: 2rem;
 }
 
+.navbar-nav li{
+  display: inline-block;
+}
+
 .navbar {
   border-radius: 0 !important;
   border-bottom: 0.05rem solid #777;

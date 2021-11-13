@@ -1,0 +1,18 @@
+.songRow{
+    width: 90%;
+    background-color: aliceblue;
+    text-align: left;
+    margin: 1.5rem;
+    padding: 1rem;
+}
+
+.songList::-webkit-scrollbar { /* Chrome */
+  display: none;
+}
+
+.songList {
+    height: 70rem;
+    overflow-y: auto;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}

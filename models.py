@@ -3,8 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app import db
 
 
-class User(UserMixin, db.Model):
-    _tablename_ = 'user'
+class Host(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), nullable=False,
                          unique=True, index=True)
@@ -26,14 +25,21 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
     def __repr__(self):
-        return '<User %r>' % self.username
+        return '<Host username %r>' % self.username
 
 
 class Event(db.Model):
-    _tablename_ = 'event'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(256), nullable=False, unique=True)
-    songs = db.Column()
+    name = db.Column(db.String(64), nullable=False, unique=True)
+    songs = db.relationship("Song", backref="event")
 
     def __repr__(self):
         return '<Event %r>' % self.id
+
+
+class Song(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), nullable=False)
+    artist = db.Column(db.String(64), nullable=False)
+    rating = db.Column(db.SmallInteger, nullable=False)
+    event_id = db.Column(db.Integer, db.ForeignKey('event.id'))

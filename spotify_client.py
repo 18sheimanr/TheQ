@@ -46,9 +46,6 @@ def spotifyAuth():
     return redirect(link)
 
 
-# authorization-code-flow Step 2.
-# Have your application request refresh and access tokens;
-# Spotify returns access and refresh tokens
 @app.route("/spotify_webhook")
 def api_callback():
 
@@ -62,7 +59,6 @@ def api_callback():
     }
     post_request = requests.post(SPOTIFY_TOKEN_URL, data=code_payload)
 
-    # Auth Step 5: Tokens are Returned to Application
     response_data = json.loads(post_request.text)
     print(response_data)
     access_token = response_data["access_token"]
@@ -80,17 +76,14 @@ def get_user_playlists():
     token = session["spotify_token"]
     authorization_header = {"Authorization": "Bearer {}".format(token)}
 
-    user_profile_api_endpoint = "{}/me".format(spotify_base_api)
-    profile_response = requests.get(user_profile_api_endpoint, headers=authorization_header)
-    profile_data = json.loads(profile_response.text)
-
-    # Get user playlist data
-    playlist_api_endpoint = "{}/playlists".format(profile_data["href"])
+    playlist_api_endpoint = "{}/me/playlists".format(spotify_base_api)
     playlists_response = requests.get(playlist_api_endpoint, headers=authorization_header)
     playlist_data = json.loads(playlists_response.text)
 
     playlists = []
     for playlist in playlist_data["items"]:
+        if playlist["tracks"]["total"] == 0:
+            continue
         if len(playlist["images"]) > 0:
             img_url = playlist["images"][0]["url"]
         else:
@@ -103,3 +96,31 @@ def get_user_playlists():
         ))
 
     return playlists
+
+
+def get_playlist_songs(playlist_spotify_id):
+    token = session["spotify_token"]
+    authorization_header = {"Authorization": "Bearer {}".format(token)}
+
+    playlist_api_endpoint = "{}/playlists/{}".format(spotify_base_api, playlist_spotify_id)
+    print(playlist_api_endpoint)
+    playlist_response = requests.get(playlist_api_endpoint, headers=authorization_header)
+    playlist_data = json.loads(playlist_response.text)
+    print(playlist_response)
+
+    songs = playlist_data["tracks"]["items"]
+    parsed_songs = []
+    print(songs[0])
+
+    for song in songs:
+        artist = (", ").join([str(a["name"]) for a in song["track"]["artists"]])
+        print(artist)
+        song_name = song["track"]["name"]
+        print(song_name)
+        song_img_url = song["track"]["album"]["images"][0]["url"]
+        print(song_img_url)
+        song_object = spotify_track(name=song_name, artist=artist, image_url=song_img_url)
+        print(song_object)
+        parsed_songs.append(song_object)
+
+    return parsed_songs

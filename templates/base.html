@@ -17,11 +17,9 @@
 
 {% block content %}
 <div class="container">
-  <nav class="navbar">
-    <div class="container">
-      <div class="navbar-header">
-        <a class="navbar-brand" href="/">THE Q</a>
-      </div>
+
+    <div class="navbar">
+      <a class="navbar-brand" href="/">THE Q</a>
       <ul class="nav navbar-nav">
         <li>
         {% if current_user.is_authenticated %}
@@ -40,7 +38,6 @@
         </li>
       </ul>
     </div>
-  </nav>
 
   {% block page_content %}{% endblock %}
 
